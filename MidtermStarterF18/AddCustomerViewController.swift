@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import CoreData
 class AddCustomerViewController: UIViewController {
 
     // MARK: Outlets
@@ -15,17 +15,24 @@ class AddCustomerViewController: UIViewController {
     @IBOutlet weak var nameTextBox: UITextField!
     @IBOutlet weak var startingBalanceTextBox: UITextField!
     @IBOutlet weak var messageLabel: UILabel!
+       var x:String = ""
     
+      var context:NSManagedObjectContext!
     // MARK: Default Functions
     // ---------------------
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
         
+        // 2. Mandatory - initialize the context variable
+        // This variable gives you access to the CoreData functions
+        self.context = appDelegate.persistentContainer.viewContext
+
         // HINT HINT HINT HINT HINT
         // HINT HINT HINT HINT HINT
         // Code to create a random 4 digit string
-        var x:String = ""
+     
         repeat {
             // Create a string with a random number 0...9991
             x = String(format:"%04d", arc4random_uniform(9992) )
@@ -46,6 +53,22 @@ class AddCustomerViewController: UIViewController {
     
     @IBAction func createAccountPressed(_ sender: Any) {
         print("you pressed the create account button!")
+        let c = Customer(context: self.context)
+        c.name = nameTextBox.text!
+        c.balance = startingBalanceTextBox.text!
+        c.id = x
+        
+        do {
+            // Save the user to the database
+            // (Send the INSERT to the database)
+            try self.context.save()
+            print("Saved to database!")
+        }
+        catch {
+            print("Error while saving to database")
+        }
+        
+        
     }
     
     
