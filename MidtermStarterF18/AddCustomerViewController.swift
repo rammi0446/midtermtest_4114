@@ -63,6 +63,7 @@ class AddCustomerViewController: UIViewController {
             // (Send the INSERT to the database)
             try self.context.save()
             print("Saved to database!")
+            messageLabel.text = x
         }
         catch {
             print("Error while saving to database")

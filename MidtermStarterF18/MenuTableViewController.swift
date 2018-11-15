@@ -49,6 +49,18 @@ class MenuTableViewController: UITableViewController {
         print("Person clicked on something")
         print(indexPath.row)
         print(options[indexPath.row])
+        if(indexPath.row == 0)
+        {
+           print("first row selected")
+        
+            
+            
+        }
+        if(indexPath.row == 1)
+        {
+         print("second row selected")
+            
+        }
     }
 
     /*
