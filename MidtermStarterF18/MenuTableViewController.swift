@@ -53,13 +53,13 @@ class MenuTableViewController: UITableViewController {
         {
            print("first row selected")
         
-            
+            self.performSegue(withIdentifier: "add", sender: self)
             
         }
         if(indexPath.row == 1)
         {
          print("second row selected")
-            
+            self.performSegue(withIdentifier: "dep", sender: self)
         }
     }
 

@@ -107,11 +107,11 @@ class DepositViewController: UIViewController {
                 print("User name:>>>>>>>>>>> \(x.name)")
                  print("previous balance >>>>>>>: \(x.balance)")
                
-                  var new =  (Int(x.balance!)! + Int(depositAmountTextBox.text!)!)
-                 x.balance = String(new)
+                var new =  (Int(x.balance!)! + Int(depositAmountTextBox.text!)!)
+                x.balance = String(new)
                 print("current balance >>>>>>>: \(x.balance)")
-                let c = Customer(context: self.context)
-                c.balance = x.balance
+//                let c = Customer(context: self.context)
+//                c.balance = x.balance
                 do {
                     // Save the user to the database
                     // (Send the INSERT to the database)
