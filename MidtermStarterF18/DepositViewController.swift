@@ -10,6 +10,8 @@ import UIKit
 import CoreData
 class DepositViewController: UIViewController {
 
+    
+    var yourid = ""
     // MARK: CoreDta variables
     // ------------------------------
     var context:NSManagedObjectContext!
@@ -47,41 +49,84 @@ class DepositViewController: UIViewController {
     
     @IBAction func checkBalancePressed(_ sender: Any) {
         print("check balance button pressed!")
-    }
-    
-    
-    @IBAction func depositButtonPressed(_ sender: Any) {
-        print("you pressed the deposit button!")
+        yourid = customerIdTextBox.text!
         
         let fetchRequest:NSFetchRequest<Customer> = Customer.fetchRequest()
-        fetchRequest.predicate =  NSPredicate(format: "id == %@", "0485")
+        
+        //WHERE email="jenelle@gmail.com"
+        fetchRequest.predicate =  NSPredicate(format: "id == %@", yourid)
+        
+        // SQL: SELECT * FROM User WHERE email="jeenlle@gmil.com"
         
         do {
-            
+            // Send the "SELECT *" to the database
+            //  results = variable that stores any "rows" that come back from the db
+            // Note: The database will send back an array of User objects
+            // (this is why I explicilty cast results as [User]
             let results = try self.context.fetch(fetchRequest) as [Customer]
             
             // Loop through the database results and output each "row" to the screen
             print("Number of items in database: \(results.count)")
             
-            if (results.count == 1) {
-                  let c = Customer(context: self.context)
-               c.balance = depositAmountTextBox.text!
+            for x in results {
+                print("User name:>>>>>>>>>>> \(x.name)")
+                print("previous balance >>>>>>>: \(x.balance)")
+                balanceLabel.text = x.balance
                 
-                // sending the SAVE to the databse
-                do {
-                    try self.context.save()
-                    print("Saved to database!")
-                }
-                catch {
-                    print("Error while saving to database")
-                }
+                
             }
-            
         }
         catch {
             print("Error when fetching from database")
         }
         
+    }
+    
+    
+    @IBAction func depositButtonPressed(_ sender: Any) {
+        print("you pressed the deposit button! and your id is = \(yourid)")
+        
+        let fetchRequest:NSFetchRequest<Customer> = Customer.fetchRequest()
+        
+        //WHERE email="jenelle@gmail.com"
+        fetchRequest.predicate =  NSPredicate(format: "id == %@", yourid)
+        
+        // SQL: SELECT * FROM User WHERE email="jeenlle@gmil.com"
+        
+        do {
+            // Send the "SELECT *" to the database
+            //  results = variable that stores any "rows" that come back from the db
+            // Note: The database will send back an array of User objects
+            // (this is why I explicilty cast results as [User]
+            let results = try self.context.fetch(fetchRequest) as [Customer]
+            
+            // Loop through the database results and output each "row" to the screen
+            print("Number of items in database: \(results.count)")
+            
+            for x in results {
+                print("User name:>>>>>>>>>>> \(x.name)")
+                 print("previous balance >>>>>>>: \(x.balance)")
+               
+                  var new =  (Int(x.balance!)! + Int(depositAmountTextBox.text!)!)
+                 x.balance = String(new)
+                print("current balance >>>>>>>: \(x.balance)")
+                let c = Customer(context: self.context)
+                c.balance = x.balance
+                do {
+                    // Save the user to the database
+                    // (Send the INSERT to the database)
+                    try self.context.save()
+                    print("Saved deposit  to database!")
+                    messagesLabel.text = "Saved deposit  to your account"
+                }
+                catch {
+                    print("Error while saving to database")
+                }
+            }
+        }
+        catch {
+            print("Error when fetching from database")
+        }
     }
     
     
